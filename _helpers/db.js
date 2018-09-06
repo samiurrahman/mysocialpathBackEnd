@@ -1,7 +1,7 @@
 const config = require('config.json');
 const mongoose = require('mongoose');
-// mongoose.connect(config.connectionString);
-mongoose.connect(config.prodURL);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/users');
+// mongoose.connect(config.prodURL);
 mongoose.Promise = global.Promise;
 
 module.exports = {
