@@ -7,58 +7,60 @@ const schema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     createdDate: { type: Date, default: Date.now },
+    aboutMe: { type: String, default: ''},
+    email: { type: String, default: '' },
     userdata: {
         male: {
             type: String,
             default: 'Male'
         },
-        aboutMe: {
-            type: String,
-            default: 'I am Software engineer at Morningstar.'
-        },
-        email: {
-            type: String,
-            default: 'samiurrahman.shaikh@gmail.com'
-        },
         facebook: {
             type: String,
-            default: 'samiurrahman.shaikh'
+            default: ''
         },
         twitter: {
             type: String,
-            default: 'Samiur11'
+            default: ''
         },
         linkedin: {
             type: String,
-            default: 'Samiurrahman.shaikh'
+            default: ''
         },
         instagram: {
             type: String,
-            default: 'Samiurra'
+            default: ''
         },
         snapchat: {
             type: String,
-            default: 'Samiur114'
+            default: ''
         },
         mysicaly: {
             type: String,
-            default: 'Samiur0011'
+            default: ''
         },
         whatsapp: {
             type: String,
-            default: '8087240710'
+            default: ''
         },
         skype: {
             type: String,
-            default: 'Samiurrahman9'
+            default: ''
         },
         imo: {
             type: String,
-            default: 'Samiurrahman'
+            default: ''
         },
         youtube: {
             type: String,
-            default: 'Samiurrahman.shaikh'
+            default: ''
+        },
+        googleplus: {
+            type: String,
+            default: ''
+        },
+        pinterest: {
+            type: String,
+            default: ''
         }
     }
 });

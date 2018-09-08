@@ -25,8 +25,8 @@ async function authenticate({ username, password }) {
     }
 }
 
-async function getAll() {
-    return await User.find().select('-hash');
+async function getAll(username) {
+    return await User.find({ 'username':  {'$regex' : username} }).select('-hash');
 }
 
 async function getById(id) {
