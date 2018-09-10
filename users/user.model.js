@@ -4,16 +4,14 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     username: { type: String, unique: true, required: true },
     hash: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: { type: String, default: '' },
+    lastName: { type: String, default: '' },
     createdDate: { type: Date, default: Date.now },
     aboutMe: { type: String, default: ''},
     email: { type: String, default: '' },
+    gender: { type: String, default: '' },
+    location: { type: String, default: '' },
     userdata: {
-        male: {
-            type: String,
-            default: 'Male'
-        },
         facebook: {
             type: String,
             default: ''
