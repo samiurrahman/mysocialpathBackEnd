@@ -61,6 +61,6 @@ function _delete(req, res, next) {
 
 function resetpassword(req, res, next) {
     userService.resetpassword()
-        .then(() => res.json({}))
+        .then((data) => res.send(data))
         .catch(err => next(err));
 }
