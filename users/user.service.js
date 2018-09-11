@@ -1,4 +1,5 @@
-﻿const config = require('config.json');
+﻿var nodemailer = require('nodemailer');
+const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
@@ -10,7 +11,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    resetpassword
 };
 
 async function authenticate({ username, password }) {
@@ -72,4 +74,42 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function resetpassword() {
+
+nodemailer.createTestAccount((err, account) => {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: 'smtpout.asia.secureserver.net',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: "admin@mysocialpath.com", // generated ethereal user
+            pass: "4078#Admin" // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized:false
+        }
+    });
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"mysocialPath 👻" <admin@mysocialpath.com>', // sender address
+        to: 'samiurrahman.shaikh@gmail.com', // list of receivers
+        subject: 'Hello ✔', // Subject line
+        text: 'Hello world?', // plain text body
+        html: '<b>Hello world?</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Message sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+    });
+});
 }
