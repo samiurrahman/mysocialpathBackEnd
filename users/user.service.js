@@ -85,9 +85,6 @@ async function resetpassword() {
         auth: {
             user: "admin@mysocialpath.com", // generated ethereal user
             pass: "4078#Admin" // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized:false
         }
     });
 
