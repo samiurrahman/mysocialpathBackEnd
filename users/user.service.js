@@ -79,9 +79,10 @@ async function _delete(id) {
 async function resetpassword() {
    
     let transporter = nodemailer.createTransport({
+        service: 'Godaddy',
         host: 'smtpout.asia.secureserver.net',
-        port: 587,
-        secure: false, // true for 465, false for other ports
+        port: 465,
+        secureConnection: true, // true for 465, false for other ports
         auth: {
             user: "admin@mysocialpath.com", // generated ethereal user
             pass: "4078#Admin" // generated ethereal password
