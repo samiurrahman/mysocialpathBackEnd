@@ -77,9 +77,7 @@ async function _delete(id) {
 }
 
 async function resetpassword() {
-
-nodemailer.createTestAccount((err, account) => {
-    // create reusable transporter object using the default SMTP transport
+   
     let transporter = nodemailer.createTransport({
         host: 'smtpout.asia.secureserver.net',
         port: 587,
@@ -111,5 +109,5 @@ nodemailer.createTestAccount((err, account) => {
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
     });
-});
+
 }
