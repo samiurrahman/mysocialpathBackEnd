@@ -77,9 +77,11 @@ async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
-async function resetpassword({ username }) {
+async function resetpassword({ username, email }) {
     const userexists = await User.findOne({ username });
     if (!userexists) throw 'User not found';
+    // if (userexists.username != username) throw 'Username Not exists';
+    // if (userexists.email != email) throw 'Email address is invalid';
     const password = generator.generate({
                         length: 10,
                         numbers: true
