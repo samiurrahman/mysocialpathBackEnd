@@ -3,6 +3,7 @@ const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
+var generator = require('generate-password');
 const User = db.User;
 
 module.exports = {
@@ -76,8 +77,48 @@ async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
-async function resetpassword() {
-   
+async function resetpassword({ username }) {
+    const userexists = await User.findOne({ username });
+    if (!userexists) throw 'User not found';
+    const password = generator.generate({
+                        length: 10,
+                        numbers: true
+                    });
+    userexists.hash = bcrypt.hashSync(password, 10);
+    // const output = `
+    //     <div style="width:100%; color: #fff; background-color: #6e7ce1; height:100px; position:relative;">
+    //         <div style="text-align:center;background-color:#fff;
+    //             width: 200px; border-radius: 6px; position:relative; left: 50%;">
+    //             <h1 style="color: rgb(17, 17, 17);">We Understand</h1>
+    //             <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
+    //             No issue please find your new generated password</h3>
+    //             <h3 style="color: rgb(17, 17, 17);">${userexists.username}</h3>
+    //             <h3 style="color: rgb(17, 17, 17);">Password= <strong>${ password }</strong></h3>
+
+    //             <p style="color: rgb(17, 17, 17);">Don't forgot to update your password!!!</p>
+    //         </div>
+    //     </div>
+    // `;
+    const output = `
+                <div style="width:100%; color: #fff; background-color: #6e7ce1;padding: 10px 10px;text-align:center;">
+                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;">mysocialpath</h1>
+                    <h2 style="color: #ffffff;margin-bottom: 0;">We Understands</h2>
+                </div>
+                <div style="position:relative; top:-50px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="center">
+                            <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
+                            No issue please find your new generated password.</h3>
+                            <h3 style="color: rgb(17, 17, 17);">username: ${userexists.username}</h3>
+                            <h3 style="color: rgb(17, 17, 17);">Password: <strong>${ password }</strong></h3>
+            
+                            <p style="color: rgb(17, 17, 17);">Don't forgot to update your password!!!</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                `;
     let transporter = nodemailer.createTransport({
         service: 'Godaddy',
         host: 'smtpout.asia.secureserver.net',
@@ -91,18 +132,21 @@ async function resetpassword() {
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"mysocialPath 👻" <admin@mysocialpath.com>', // sender address
-        to: 'samiurrahman.shaikh@gmail.com', // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-        html: '<b>Hello world?</b>' // html body
+        from: '"mysocialPath" <admin@mysocialpath.com>', // sender address
+        to: userexists.email, // list of receivers
+        subject: 'Password Reset', // Subject line
+        text: 'We found it', // plain text body
+        html: output // html body
     };
+    Object.assign(userexists, userexists);
 
+    await userexists.save();
     // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error);
         }
+        console.log(user);
         console.log('Message sent: %s', info.messageId);
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 

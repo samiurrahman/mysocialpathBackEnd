@@ -60,7 +60,7 @@ function _delete(req, res, next) {
 }
 
 function resetpassword(req, res, next) {
-    userService.resetpassword()
+    userService.resetpassword(req.body)
         .then((data) => res.send(data))
         .catch(err => next(err));
 }
