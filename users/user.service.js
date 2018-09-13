@@ -77,21 +77,50 @@ async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
-async function resetpassword({ username }) {
+async function resetpassword({ username, email }) {
     const userexists = await User.findOne({ username });
     if (!userexists) throw 'User not found';
+    // if (userexists.username != username) throw 'Username Not exists';
+    // if (userexists.email != email) throw 'Email address is invalid';
     const password = generator.generate({
                         length: 10,
                         numbers: true
                     });
     userexists.hash = bcrypt.hashSync(password, 10);
-    const output = `
-        <p>You have new contect request</p>
-        <h3>here you go</h3>
-        <h3>${userexists.email}</h3>
-        <h3>${ password }</h3>
+    // const output = `
+    //     <div style="width:100%; color: #fff; background-color: #6e7ce1; height:100px; position:relative;">
+    //         <div style="text-align:center;background-color:#fff;
+    //             width: 200px; border-radius: 6px; position:relative; left: 50%;">
+    //             <h1 style="color: rgb(17, 17, 17);">We Understand</h1>
+    //             <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
+    //             No issue please find your new generated password</h3>
+    //             <h3 style="color: rgb(17, 17, 17);">${userexists.username}</h3>
+    //             <h3 style="color: rgb(17, 17, 17);">Password= <strong>${ password }</strong></h3>
 
-    `;
+    //             <p style="color: rgb(17, 17, 17);">Don't forgot to update your password!!!</p>
+    //         </div>
+    //     </div>
+    // `;
+    const output = `
+                <div style="width:100%; color: #fff; background-color: #6e7ce1;padding: 10px 10px;text-align:center;">
+                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;">mysocialpath</h1>
+                    </div>
+                    <div style="position:relative; top:-50px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                    <td align="center">
+                            <h2 style="color: rgb(17, 17, 17);;margin-bottom: 0;">We Understand.</h2>
+                            <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
+                            No issue please find your new generated password.</h3>
+                            <h3 style="color: rgb(17, 17, 17);">username: ${userexists.username}</h3>
+                            <h3 style="color: rgb(17, 17, 17);">Password: <strong>${ password }</strong></h3>
+            
+                            <p style="color: rgb(17, 17, 17);">Don't forgot to update your password!!!</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                `;
     let transporter = nodemailer.createTransport({
         service: 'Godaddy',
         host: 'smtpout.asia.secureserver.net',
