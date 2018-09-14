@@ -79,9 +79,10 @@ async function _delete(id) {
 
 async function resetpassword({ username, email }) {
     const userexists = await User.findOne({ username });
+    // console.log(userexists);
     if (!userexists) throw 'User not found';
-    // if (userexists.username != username) throw 'Username Not exists';
-    // if (userexists.email != email) throw 'Email address is invalid';
+    if (userexists.username != username) throw 'Username Not exists';
+    if (userexists.email != email) throw 'Email address is invalid';
     const password = generator.generate({
                         length: 10,
                         numbers: true
@@ -103,7 +104,7 @@ async function resetpassword({ username, email }) {
     // `;
     const output = `
                 <div style="width:100%; color: #fff; background-color: #6e7ce1;padding: 10px 10px;text-align:center;">
-                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;">mysocialpath</h1>
+                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;    margin-bottom: 0px;">mysocialpath</h1>
                     </div>
                     <div style="position:relative; top:-50px;">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -111,7 +112,7 @@ async function resetpassword({ username, email }) {
                     <td align="center">
                             <h2 style="color: rgb(17, 17, 17);;margin-bottom: 0;">We Understand.</h2>
                             <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
-                            No issue please find your new generated password.</h3>
+                            No worries please find your new generated password.</h3>
                             <h3 style="color: rgb(17, 17, 17);">username: ${userexists.username}</h3>
                             <h3 style="color: rgb(17, 17, 17);">Password: <strong>${ password }</strong></h3>
             
