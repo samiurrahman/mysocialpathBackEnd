@@ -13,7 +13,8 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    resetpassword
+    resetpassword,
+    upadepassword
 };
 
 async function authenticate({ username, password }) {
@@ -63,6 +64,36 @@ async function update(id, userParam) {
     }
 
     // hash password if it was entered
+    if (userParam.old_pass) {
+        
+        if (bcrypt.compareSync(userParam.old_pass, user.hash)) {
+            if (userParam.new_pass) {
+                userParam.hash = bcrypt.hashSync(userParam.new_pass, 10);
+            }else {
+                throw 'New Password Not entered';
+            }
+        }else {
+            throw 'Old Password not match';
+        }
+    }
+
+    // copy userParam properties to user
+    Object.assign(user, userParam);
+
+    await user.save();
+}
+
+async function upadepassword(userParam) {
+
+    const user = await User.findById(userParam.id);
+
+    // validate
+    if (!user) throw 'User not found';
+    if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
+        throw 'Username "' + userParam.username + '" is already taken';
+    }
+
+    // hash password if it was entered
     if (userParam.password) {
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
@@ -88,20 +119,6 @@ async function resetpassword({ username, email }) {
                         numbers: true
                     });
     userexists.hash = bcrypt.hashSync(password, 10);
-    // const output = `
-    //     <div style="width:100%; color: #fff; background-color: #6e7ce1; height:100px; position:relative;">
-    //         <div style="text-align:center;background-color:#fff;
-    //             width: 200px; border-radius: 6px; position:relative; left: 50%;">
-    //             <h1 style="color: rgb(17, 17, 17);">We Understand</h1>
-    //             <h3 style="color: rgb(17, 17, 17);">It's hard to remember many passwords.<br/>
-    //             No issue please find your new generated password</h3>
-    //             <h3 style="color: rgb(17, 17, 17);">${userexists.username}</h3>
-    //             <h3 style="color: rgb(17, 17, 17);">Password= <strong>${ password }</strong></h3>
-
-    //             <p style="color: rgb(17, 17, 17);">Don't forgot to update your password!!!</p>
-    //         </div>
-    //     </div>
-    // `;
     const output = `
                 <div style="width:100%; color: #fff; background-color: #6e7ce1;padding: 10px 10px;text-align:center;">
                     <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;    margin-bottom: 0px;">mysocialpath</h1>
@@ -129,7 +146,7 @@ async function resetpassword({ username, email }) {
         secureConnection: true, // true for 465, false for other ports
         auth: {
             user: "admin@mysocialpath.com", // generated ethereal user
-            pass: "4078#Admin" // generated ethereal password
+            pass: "4078!Admin" // generated ethereal password
         }
     });
 
@@ -149,10 +166,8 @@ async function resetpassword({ username, email }) {
         if (error) {
             return console.log(error);
         }
-        console.log(user);
-        console.log('Message sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
     });
+
+ 
 
 }

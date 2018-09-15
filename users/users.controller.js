@@ -9,6 +9,7 @@ router.post('/search', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
+router.post('/upadepassword', upadepassword);
 router.delete('/:id', _delete);
 router.post('/resetpassword', resetpassword);
 
@@ -40,15 +41,21 @@ function getCurrent(req, res, next) {
 }
 
 function getById(req, res, next) {
-    userService.getById(req.params.id)
+    userService.getAll(req.params.id)
         .then(user => user ? res.json(user) : res.sendStatus(404))
         .catch(err => next(err));
 }
 
 function update(req, res, next) {
-    // res.send(req.params.id);
-    // res.send(req.body);
+    // console.log(req.params.id);
+    // console.log(req.body);
     userService.update(req.params.id, req.body)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function upadepassword(req, res, next) {
+    userService.upadepassword(req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
