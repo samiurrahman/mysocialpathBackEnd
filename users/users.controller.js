@@ -12,6 +12,7 @@ router.put('/:id', update);
 router.post('/upadepassword', upadepassword);
 router.delete('/:id', _delete);
 router.post('/resetpassword', resetpassword);
+router.post('/singleUser', singleUser);
 
 module.exports = router;
 
@@ -69,6 +70,12 @@ function _delete(req, res, next) {
 function resetpassword(req, res, next) {
     // console.log(req.body);
     userService.resetpassword(req.body)
+        .then((data) => res.send(data))
+        .catch(err => next(err));
+}
+function singleUser(req, res, next) {
+    // console.log(req.body);
+    userService.singleUser(req.body)
         .then((data) => res.send(data))
         .catch(err => next(err));
 }

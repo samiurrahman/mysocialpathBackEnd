@@ -14,7 +14,8 @@ module.exports = {
     update,
     delete: _delete,
     resetpassword,
-    upadepassword
+    upadepassword,
+    singleUser
 };
 
 async function authenticate({ username, password }) {
@@ -102,6 +103,10 @@ async function upadepassword(userParam) {
     Object.assign(user, userParam);
 
     await user.save();
+}
+
+async function singleUser({ username }) {
+    return await User.findOne({ username });
 }
 
 async function _delete(id) {
