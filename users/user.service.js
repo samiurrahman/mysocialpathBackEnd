@@ -118,10 +118,10 @@ async function socialRegister(userParam) {
     if(!user) {
         const user = new User(userParam);
         user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
-        user.firstName = userParam.first_name.trim().toLowerCase();
-        user.lastName = userParam.last_name.trim().toLowerCase();
-        user.email = userParam.email.trim().toLowerCase();
-        user.userdata.facebook = userParam.name.trim().toLowerCase();
+        user.firstName = userParam.first_name;
+        user.lastName = userParam.last_name;
+        user.email = userParam.email;
+        user.userdata.facebook = userParam.name;
         user.hash = bcrypt.hashSync(userParam.id, 10);
         // save user
         await user.save();
