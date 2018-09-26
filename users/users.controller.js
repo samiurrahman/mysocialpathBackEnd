@@ -13,6 +13,7 @@ router.post('/upadepassword', upadepassword);
 router.delete('/:id', _delete);
 router.post('/resetpassword', resetpassword);
 router.post('/singleUser', singleUser);
+router.post('/socialRegister', socialRegister);
 
 module.exports = router;
 
@@ -73,9 +74,23 @@ function resetpassword(req, res, next) {
         .then((data) => res.send(data))
         .catch(err => next(err));
 }
+
 function singleUser(req, res, next) {
-    // console.log(req.body);
     userService.singleUser(req.body)
         .then((data) => res.send(data))
+        .catch(err => next(err));
+}
+
+function socialRegister(req, res, next) {
+
+    userService.socialRegister(req.body)
+        .then((data) => {
+            const credentials = {
+                "username": data.username.split(' ').join('.').trim().toLowerCase(),
+                "password": req.body.id
+            };
+            userService.authenticate(credentials)
+            .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+        })
         .catch(err => next(err));
 }

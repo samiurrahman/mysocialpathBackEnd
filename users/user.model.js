@@ -8,58 +8,23 @@ const schema = new Schema({
     lastName: { type: String, default: '' },
     createdDate: { type: Date, default: Date.now },
     aboutMe: { type: String, default: ''},
-    email: { type: String, default: '' },
+    email: { type: String, required: true },
     gender: { type: String, default: '' },
     location: { type: String, default: '' },
+    provider: { type: String, default: 'self' },
     userdata: {
-        facebook: {
-            type: String,
-            default: ''
-        },
-        twitter: {
-            type: String,
-            default: ''
-        },
-        linkedin: {
-            type: String,
-            default: ''
-        },
-        instagram: {
-            type: String,
-            default: ''
-        },
-        snapchat: {
-            type: String,
-            default: ''
-        },
-        mysicaly: {
-            type: String,
-            default: ''
-        },
-        whatsapp: {
-            type: String,
-            default: ''
-        },
-        skype: {
-            type: String,
-            default: ''
-        },
-        imo: {
-            type: String,
-            default: ''
-        },
-        youtube: {
-            type: String,
-            default: ''
-        },
-        googleplus: {
-            type: String,
-            default: ''
-        },
-        pinterest: {
-            type: String,
-            default: ''
-        }
+        facebook: { type: String, default: '' },
+        twitter: { type: String, default: '' },
+        linkedin: { type: String,  default: '' },
+        instagram: { type: String, default: '' },
+        snapchat: { type: String, default: '' },
+        mysicaly: { type: String, default: '' },
+        whatsapp: { type: String, default: '' },
+        skype: { type: String, default: '' },
+        imo: { type: String, default: '' },
+        youtube: { type: String, default: '' },
+        googleplus: { type: String, default: '' },
+        pinterest: { type: String, default: '' }
     }
 });
 

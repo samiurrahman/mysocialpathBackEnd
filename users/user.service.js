@@ -1,9 +1,10 @@
-﻿var nodemailer = require('nodemailer');
+﻿const nodemailer = require('nodemailer');
 const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
-var generator = require('generate-password');
+const generator = require('generate-password');
+const mongoose = require('mongoose');
 const User = db.User;
 
 module.exports = {
@@ -15,7 +16,8 @@ module.exports = {
     delete: _delete,
     resetpassword,
     upadepassword,
-    singleUser
+    singleUser,
+    socialRegister
 };
 
 async function authenticate({ username, password }) {
@@ -107,6 +109,26 @@ async function upadepassword(userParam) {
 
 async function singleUser({ username }) {
     return await User.findOne({ username });
+}
+
+
+// Social Register
+async function socialRegister(userParam) {
+    const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
+    if(!user) {
+        const user = new User(userParam);
+        user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
+        user.firstName = userParam.first_name.trim().toLowerCase();
+        user.lastName = userParam.last_name.trim().toLowerCase();
+        user.email = userParam.email.trim().toLowerCase();
+        user.userdata.facebook = userParam.name.trim().toLowerCase();
+        user.hash = bcrypt.hashSync(userParam.id, 10);
+        // save user
+        await user.save();
+        return user;
+    }else {
+        return user;
+    }
 }
 
 async function _delete(id) {
