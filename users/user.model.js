@@ -12,20 +12,91 @@ const schema = new Schema({
     gender: { type: String, default: '' },
     location: { type: String, default: '' },
     provider: { type: String, default: 'self' },
+    bookmarked: { type: String, default: '' },
     userdata: {
-        facebook: { type: String, default: '' },
-        twitter: { type: String, default: '' },
-        linkedin: { type: String,  default: '' },
-        instagram: { type: String, default: '' },
-        snapchat: { type: String, default: '' },
-        mysicaly: { type: String, default: '' },
-        whatsapp: { type: String, default: '' },
-        skype: { type: String, default: '' },
-        imo: { type: String, default: '' },
-        youtube: { type: String, default: '' },
-        googleplus: { type: String, default: '' },
-        pinterest: { type: String, default: '' }
-    }
+        type: Array,
+        default: [
+                { 
+                    label: 'facebook',
+                    name: '',
+                    link: '',
+                    order: '',
+                }, 
+                {
+                    label: 'twitter',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'linkedin',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'instagram',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'snapchat',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'mysicaly',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'whatsapp',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'skype',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'imo',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'youtube',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'googleplus',
+                    name: '',
+                    link: '',
+                    order: '',
+                },
+                {
+                    label: 'pinterest',
+                    name: '',
+                    link: '',
+                    order: '',
+                }
+                
+            ] 
+    },
+    bookmark: [
+        {
+            name: { type: String },
+            username: { type: String },
+        }
+    ]
 });
 
 schema.set('toJSON', { virtuals: true });

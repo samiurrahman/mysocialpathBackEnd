@@ -9,6 +9,7 @@ router.post('/search', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
+router.post('/bookmark', bookmark);
 router.post('/upadepassword', upadepassword);
 router.delete('/:id', _delete);
 router.post('/resetpassword', resetpassword);
@@ -49,9 +50,13 @@ function getById(req, res, next) {
 }
 
 function update(req, res, next) {
-    // console.log(req.params.id);
-    // console.log(req.body);
     userService.update(req.params.id, req.body)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function bookmark(req, res, next) {
+    userService.bookmark(req.body.id, req.body.user)
         .then(() => res.json({}))
         .catch(err => next(err));
 }

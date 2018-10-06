@@ -17,11 +17,17 @@ module.exports = {
     resetpassword,
     upadepassword,
     singleUser,
-    socialRegister
+    socialRegister,
+    bookmark
 };
 
+
+// Authenticate User
 async function authenticate({ username, password }) {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({$or: [
+                    { username },
+                    { email: username}
+                ]});
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
@@ -31,19 +37,34 @@ async function authenticate({ username, password }) {
         };
     }
 }
+// Ends
 
+
+
+// Get All user or Search user
 async function getAll(username) {
     return await User.find({ 'username':  {'$regex' : username} }).select('-hash');
 }
+// Ends
 
+
+
+// get user By Id
 async function getById(id) {
     return await User.findById(id).select('-hash');
 }
+// Ends
 
+
+
+// Craete user
 async function create(userParam) {
     // validate
     if (await User.findOne({ username: userParam.username })) {
         throw 'Username "' + userParam.username + '" is already taken';
+    }
+    if (await User.findOne({ email: userParam.email })) {
+        throw 'Email "' + userParam.email + '" is already registered';
     }
 
     const user = new User(userParam);
@@ -56,7 +77,11 @@ async function create(userParam) {
     // save user
     await user.save();
 }
+// Ends
 
+
+
+// Update Profile or Edit
 async function update(id, userParam) {
     const user = await User.findById(id);
 
@@ -85,7 +110,21 @@ async function update(id, userParam) {
 
     await user.save();
 }
+// Ends
 
+
+
+// bookmark user
+async function bookmark(id, userParam) {
+    const user = await User.findById(id);
+    user.bookmark.push(userParam);
+    await user.save();
+}
+// Ends
+
+
+
+// Update password
 async function upadepassword(userParam) {
 
     const user = await User.findById(userParam.id);
@@ -106,10 +145,16 @@ async function upadepassword(userParam) {
 
     await user.save();
 }
+// ends
 
+
+
+// Fetch Single profile
 async function singleUser({ username }) {
     return await User.findOne({ username });
 }
+// ends
+
 
 
 // Social Register
@@ -121,7 +166,11 @@ async function socialRegister(userParam) {
         user.firstName = userParam.first_name;
         user.lastName = userParam.last_name;
         user.email = userParam.email;
-        user.userdata.facebook = userParam.name;
+        if (userParam.provider === 'facebook') {
+            user.userdata[0].name = userParam.name;
+        } else {
+            user.userdata[10].name = userParam.name;
+        }
         user.hash = bcrypt.hashSync(userParam.id, 10);
         // save user
         await user.save();
@@ -130,17 +179,28 @@ async function socialRegister(userParam) {
         return user;
     }
 }
+// ends
 
+
+
+// Delete User
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
+// ends
 
+
+
+// password Reset
 async function resetpassword({ username, email }) {
-    const userexists = await User.findOne({ username });
+    const userexists = await User.findOne({$or: [
+        { username },
+        { email: username}
+    ]});
     // console.log(userexists);
-    if (!userexists) throw 'User not found';
-    if (userexists.username != username) throw 'Username Not exists';
-    if (userexists.email != email) throw 'Email address is invalid';
+    if (!userexists) throw 'User not found either with Username or Email ID';
+    // if (userexists.username != username || userexists.email != email) throw `${username} Not exists`;
+    // if (userexists.email != email) throw 'Email address is invalid';
     const password = generator.generate({
                         length: 10,
                         numbers: true
@@ -193,8 +253,6 @@ async function resetpassword({ username, email }) {
         if (error) {
             return console.log(error);
         }
-    });
-
- 
-
+    }); 
 }
+// Ends
