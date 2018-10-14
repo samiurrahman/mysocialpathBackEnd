@@ -20,73 +20,84 @@ const schema = new Schema({
                     label: 'facebook',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 }, 
                 {
                     label: 'twitter',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'linkedin',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'instagram',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'snapchat',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
                 },
                 {
-                    label: 'mysicaly',
+                    label: 'tiktok',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'whatsapp',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'skype',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'imo',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'youtube',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'googleplus',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'pinterest',
                     name: '',
                     link: '',
-                    order: '',
+                    visible: 'true',
+                    delete: 'system'
                 }
                 
             ] 

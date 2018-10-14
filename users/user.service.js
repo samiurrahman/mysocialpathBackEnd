@@ -162,7 +162,7 @@ async function socialRegister(userParam) {
     const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
     if(!user) {
         const user = new User(userParam);
-        user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
+        user.username = userParam.first_name.split(' ').join('.').trim().toLowerCase();
         user.firstName = userParam.first_name;
         user.lastName = userParam.last_name;
         user.email = userParam.email;
@@ -208,7 +208,7 @@ async function resetpassword({ username, email }) {
     userexists.hash = bcrypt.hashSync(password, 10);
     const output = `
                 <div style="width:100%; color: #fff; background-color: #6e7ce1;padding: 10px 10px;text-align:center;">
-                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;    margin-bottom: 0px;">mysocialpath</h1>
+                    <h1 style="color: #ffffff;font-size: 28px;margin-top: 0;    margin-bottom: 0px;">Socialcob</h1>
                     </div>
                     <div style="position:relative; top:-50px;">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -232,8 +232,8 @@ async function resetpassword({ username, email }) {
         port: 465,
         secureConnection: true, // true for 465, false for other ports
         auth: {
-            user: "admin@mysocialpath.com", // generated ethereal user
-            pass: "4078!Admin" // generated ethereal password
+            user: "admin@socialcob.com", // generated ethereal user
+            pass: "4078#Admin" // generated ethereal password
         }
     });
 
