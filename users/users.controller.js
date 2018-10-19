@@ -24,8 +24,8 @@ router.post('/imageUrlUpdate', imageUrlUpdate);
 module.exports = router;
 
 aws.config.update({
-    secretAccessKey: 'hnlCs5jswT2HcYRhosPJDi1MhpH17jiOTGFbf85D',
-    accessKeyId: 'AKIAJ7HF3TUUMNPOGHLQ',
+    secretAccessKey: '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',
+    accessKeyId: 'AKIAILLUODFEJKNBWS2A',
     region: 'ap-south-1',
 });
 const s3 = new aws.S3();
