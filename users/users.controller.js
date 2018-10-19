@@ -1,6 +1,9 @@
 ﻿const express = require('express');
 const router = express.Router();
 const userService = require('./user.service');
+aws = require('aws-sdk'), // ^2.2.41
+multer = require('multer'), // "multer": "^1.1.0"
+multerS3 = require('multer-s3'); //"^1.4.1"
 
 // routes
 router.post('/authenticate', authenticate);
@@ -15,8 +18,52 @@ router.delete('/:id', _delete);
 router.post('/resetpassword', resetpassword);
 router.post('/singleUser', singleUser);
 router.post('/socialRegister', socialRegister);
+router.post('/imageUpload', imageUpload);
+router.post('/imageUrlUpdate', imageUrlUpdate);
 
 module.exports = router;
+
+aws.config.update({
+    secretAccessKey: 'hnlCs5jswT2HcYRhosPJDi1MhpH17jiOTGFbf85D',
+    accessKeyId: 'AKIAJ7HF3TUUMNPOGHLQ',
+    region: 'ap-south-1',
+});
+const s3 = new aws.S3();
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else {
+        return cb(new Error('file is invilid'));
+    }
+}
+
+function imageUpload (req, res, next) {
+    var upload = multer({
+        limits: {
+            fileSize: 300 * 300 * 1 // we are allowing only 1 MB files
+        },
+        fileFilter: fileFilter,
+        storage: multerS3({
+            s3: s3,
+            bucket: 'www.socialcob.com',
+            key: function (req, file, cb) {
+                const newFileName = Date.now() + "-" + file.originalname;
+                fullPath = 'assets/users/'+ newFileName;
+                cb(null, fullPath); //use Date.now() for unique file keys
+            }
+        })
+    }).single('upl',1)
+    upload(req, res, function(err) {
+        if (req.file) {
+            res.send(req.file);
+        } else {
+            res.status(400).json({ message: 'Something Went Wrong!!' })
+        }
+        return 'done';
+    });
+}
+
+
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
@@ -86,6 +133,12 @@ function singleUser(req, res, next) {
         .catch(err => next(err));
 }
 
+function imageUrlUpdate(req, res, next) {
+    userService.imageUrlUpdate(req.body)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
 function socialRegister(req, res, next) {
 
     userService.socialRegister(req.body)
@@ -99,3 +152,4 @@ function socialRegister(req, res, next) {
         })
         .catch(err => next(err));
 }
+

@@ -18,10 +18,9 @@ module.exports = {
     upadepassword,
     singleUser,
     socialRegister,
-    bookmark
+    bookmark,
+    imageUrlUpdate
 };
-
-
 // Authenticate User
 async function authenticate({ username, password }) {
     const user = await User.findOne({$or: [
@@ -52,6 +51,22 @@ async function getAll(username) {
 // get user By Id
 async function getById(id) {
     return await User.findById(id).select('-hash');
+}
+// Ends
+
+
+
+// Update User Image
+async function imageUrlUpdate({username, imgUrl}) {
+    // console.log(username);
+    // console.log(imgUrl);
+    const user = await User.findOne({ username });
+    // console.log(user);
+
+    user.imgUrl = imgUrl;
+
+    await user.save();
+    return user;
 }
 // Ends
 
@@ -156,7 +171,6 @@ async function singleUser({ username }) {
 // ends
 
 
-
 // Social Register
 async function socialRegister(userParam) {
     const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
@@ -166,6 +180,8 @@ async function socialRegister(userParam) {
         user.firstName = userParam.first_name;
         user.lastName = userParam.last_name;
         user.email = userParam.email;
+        user.imgUrl = userParam.image;
+
         if (userParam.provider === 'facebook') {
             user.userdata[0].name = userParam.name;
         } else {
