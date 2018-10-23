@@ -19,8 +19,17 @@ module.exports = {
     singleUser,
     socialRegister,
     bookmark,
-    imageUrlUpdate
+    imageUrlUpdate,
+    s3
 };
+
+//s3 access
+async function s3() {
+    return await User.findOne({ username: "s3"});
+}
+
+// ends
+
 // Authenticate User
 async function authenticate({ username, password }) {
     const user = await User.findOne({$or: [

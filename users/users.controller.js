@@ -4,6 +4,7 @@ const userService = require('./user.service');
 aws = require('aws-sdk'), // ^2.2.41
 multer = require('multer'), // "multer": "^1.1.0"
 multerS3 = require('multer-s3'); //"^1.4.1"
+const config = require('config.json');
 
 // routes
 router.post('/authenticate', authenticate);
@@ -23,44 +24,49 @@ router.post('/imageUrlUpdate', imageUrlUpdate);
 
 module.exports = router;
 
-aws.config.update({
-    secretAccessKey: 'CTyR+IeHDzmue+C2V',
-    accessKeyId: 'AKIAIBD',
-    region: 'ap-south-1',
-});
-const s3 = new aws.S3();
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cb(null, true)
-    } else {
-        return cb(new Error('file is invilid'));
-    }
-}
 
 function imageUpload (req, res, next) {
-    var upload = multer({
-        limits: {
-            fileSize: 300 * 300 * 1 // we are allowing only 1 MB files
-        },
-        fileFilter: fileFilter,
-        storage: multerS3({
-            s3: s3,
-            bucket: 'www.socialcob.com',
-            key: function (req, file, cb) {
-                const newFileName = Date.now() + "-" + file.originalname;
-                fullPath = 'assets/users/'+ newFileName;
-                cb(null, fullPath); //use Date.now() for unique file keys
+    userService.s3()
+    .then(s3data => {
+        aws.config.update({
+            secretAccessKey: s3data._doc.secretAccessKey,
+            accessKeyId: s3data._doc.accessKeyId,
+            region: s3data._doc.region,
+        });
+        const s3 = new aws.S3();
+        const fileFilter = (req, file, cb) => {
+            if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+                cb(null, true)
+            } else {
+                return cb(new Error('file is invilid'));
             }
-        })
-    }).single('upl',1)
-    upload(req, res, function(err) {
-        if (req.file) {
-            res.send(req.file);
-        } else {
-            res.status(400).json({ message: 'Something Went Wrong!!' })
         }
-        return 'done';
-    });
+        var upload = multer({
+            limits: {
+                fileSize: 300 * 300 * 1 // we are allowing only 1 MB files
+            },
+            fileFilter: fileFilter,
+            storage: multerS3({
+                s3: s3,
+                bucket: 'www.socialcob.com',
+                key: function (req, file, cb) {
+                    const newFileName = Date.now() + "-" + file.originalname;
+                    fullPath = 'assets/users/'+ newFileName;
+                    cb(null, fullPath); //use Date.now() for unique file keys
+                }
+            })
+        }).single('upl',1)
+        upload(req, res, function(err) {
+            if (req.file) {
+                res.send(req.file);
+            } else {
+                res.status(400).json({ message: 'Something Went Wrong!!' })
+            }
+            return 'done';
+        });
+    }).catch(err => next(err));
+
+   
 }
 
 
