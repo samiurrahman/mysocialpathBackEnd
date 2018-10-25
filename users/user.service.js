@@ -25,7 +25,7 @@ module.exports = {
 
 //s3 access
 async function s3() {
-    return await User.findOne({ username: "s3"});
+    return await User.findOne({ bucket: "s3"});
 }
 
 // ends
@@ -185,17 +185,18 @@ async function socialRegister(userParam) {
     const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
     if(!user) {
         const user = new User(userParam);
-        user.username = userParam.first_name.split(' ').join('.').trim().toLowerCase();
-        user.firstName = userParam.first_name;
-        user.lastName = userParam.last_name;
-        user.email = userParam.email;
-        user.imgUrl = userParam.image;
-
+        
         if (userParam.provider === 'facebook') {
+            user.username = userParam.first_name.split(' ').join('.').trim().toLowerCase();
+            user.firstName = userParam.first_name;
+            user.lastName = userParam.last_name;
             user.userdata[0].name = userParam.name;
         } else {
+            user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
             user.userdata[10].name = userParam.name;
         }
+        user.email = userParam.email;
+        user.imgUrl = userParam.image;
         user.hash = bcrypt.hashSync(userParam.id, 10);
         // save user
         await user.save();
