@@ -193,6 +193,7 @@ async function socialRegister(userParam) {
             user.userdata[0].name = userParam.name;
         } else {
             user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
+            user.firstName = userParam.name;
             user.userdata[10].name = userParam.name;
         }
         user.email = userParam.email;
