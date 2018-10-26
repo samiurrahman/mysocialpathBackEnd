@@ -62,6 +62,9 @@ async function getAll(username) {
                 },
                 { 
                     'lastName':  {'$regex' : username} 
+                },
+                { 
+                    'email':  {'$regex' : username} 
                 }
             ]
         }).select('-hash');
