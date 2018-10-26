@@ -51,7 +51,20 @@ async function authenticate({ username, password }) {
 
 // Get All user or Search user
 async function getAll(username) {
-    return await User.find({ 'username':  {'$regex' : username} }).select('-hash');
+    return await User.find(
+        {
+            $or: [
+                { 
+                    'username':  {'$regex' : username} 
+                },
+                { 
+                    'firstName':  {'$regex' : username} 
+                },
+                { 
+                    'lastName':  {'$regex' : username} 
+                }
+            ]
+        }).select('-hash');
 }
 // Ends
 
