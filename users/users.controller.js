@@ -60,7 +60,7 @@ function imageUpload (req, res, next) {
             if (req.file) {
                 res.send(req.file);
             } else {
-                res.status(400).json({ message: 'Something Went Wrong!!' })
+                res.status(400).json({ message: 'Something Went Wrong. Please try once again!!' })
             }
             return 'done';
         });

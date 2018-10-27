@@ -282,7 +282,7 @@ async function resetpassword({ username, email }) {
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"mysocialPath" <admin@mysocialpath.com>', // sender address
+        from: '"socialcob" <admin@socialcob.com>', // sender address
         to: userexists.email, // list of receivers
         subject: 'Password Reset', // Subject line
         text: 'We found it', // plain text body
