@@ -100,11 +100,11 @@ async function imageUrlUpdate({username, imgUrl}) {
 // Craete user
 async function create(userParam) {
     // validate
-    if (await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
-    }
     if (await User.findOne({ email: userParam.email })) {
         throw 'Email "' + userParam.email + '" is already registered';
+    }
+    if (await User.findOne({ username: userParam.username })) {
+        throw 'Username "' + userParam.username + '" is already taken';
     }
 
     const user = new User(userParam);
@@ -127,28 +127,57 @@ async function update(id, userParam) {
 
     // validate
     if (!user) throw 'User not found';
-    // if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
+    // if (user.email !== userParam.email && await User.findOne({ username: userParam.username })) {
     //     throw 'Username "' + userParam.username + '" is already taken';
     // }
 
-    // hash password if it was entered
-    if (userParam.old_pass) {
-        
-        if (bcrypt.compareSync(userParam.old_pass, user.hash)) {
-            if (userParam.new_pass) {
-                userParam.hash = bcrypt.hashSync(userParam.new_pass, 10);
+    if (user.email === userParam.email) {
+        // if (await User.findOne({ email: userParam.email })) {
+        //     throw 'Email "' + userParam.email + '" is already registered';
+        // }
+    
+        // hash password if it was entered
+        if (userParam.old_pass) {
+            
+            if (bcrypt.compareSync(userParam.old_pass, user.hash)) {
+                if (userParam.new_pass) {
+                    userParam.hash = bcrypt.hashSync(userParam.new_pass, 10);
+                }else {
+                    throw 'New Password Not entered';
+                }
             }else {
-                throw 'New Password Not entered';
+                throw 'Old Password not match';
             }
-        }else {
-            throw 'Old Password not match';
         }
+    
+        // copy userParam properties to user
+        Object.assign(user, userParam);
+    
+        await user.save();
+    } else if (await User.findOne({ email: userParam.email })) {
+            throw 'Email "' + userParam.email + '" is already registered';
+    } else {
+        // hash password if it was entered
+        if (userParam.old_pass) {
+            
+            if (bcrypt.compareSync(userParam.old_pass, user.hash)) {
+                if (userParam.new_pass) {
+                    userParam.hash = bcrypt.hashSync(userParam.new_pass, 10);
+                }else {
+                    throw 'New Password Not entered';
+                }
+            }else {
+                throw 'Old Password not match';
+            }
+        }
+    
+        // copy userParam properties to user
+        Object.assign(user, userParam);
+    
+        await user.save();
+
     }
 
-    // copy userParam properties to user
-    Object.assign(user, userParam);
-
-    await user.save();
 }
 // Ends
 
