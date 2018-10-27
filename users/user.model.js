@@ -50,6 +50,7 @@ const schema = new Schema({
                     name: '',
                     link: '',
                     visible: 'true',
+                    delete: 'system'
                 },
                 {
                     label: 'tiktok',
