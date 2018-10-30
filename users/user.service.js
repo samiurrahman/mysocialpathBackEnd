@@ -67,7 +67,7 @@ async function getAll(username) {
                     'email':  {'$regex' : username} 
                 }
             ]
-        }).select('-hash -email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -location -region -provider');
+        }).select('-hash -email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -region -provider');
 }
 // Ends
 
