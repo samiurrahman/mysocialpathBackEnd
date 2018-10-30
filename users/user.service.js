@@ -35,7 +35,7 @@ async function authenticate({ username, password }) {
     const user = await User.findOne({$or: [
                     { username },
                     { email: username}
-                ]}).select('-email -email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -location -region -provider -firstName -lastName');
+                ]}).select('-email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -location -region -provider -firstName -lastName');
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
@@ -75,7 +75,7 @@ async function getAll(username) {
 
 // get user By Id
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    return await User.findById(id).select('-hash -accessKeyId -secretAccessKey -region');
 }
 // Ends
 
@@ -85,13 +85,12 @@ async function getById(id) {
 async function imageUrlUpdate({username, imgUrl}) {
     // console.log(username);
     // console.log(imgUrl);
-    const user = await User.findOne({ username }).select('-hash');;
+    const user = await User.findOne({ username }).select('-hash -accessKeyId -secretAccessKey -region');;
     // console.log(user);
 
     user.imgUrl = imgUrl;
 
     await user.save();
-    return user;
 }
 // Ends
 
@@ -220,7 +219,7 @@ async function upadepassword(userParam) {
 
 // Fetch Single profile
 async function singleUser({ username }) {
-    return await User.findOne({ username }).select('-hash');;
+    return await User.findOne({ username }).select('-hash -accessKeyId -secretAccessKey -region -email');;
 }
 // ends
 
