@@ -35,7 +35,7 @@ async function authenticate({ username, password }) {
     const user = await User.findOne({$or: [
                     { username },
                     { email: username}
-                ]}).select('-email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -location -region -provider -firstName -lastName');
+                ]}).select('-email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -location -region -provider');
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
