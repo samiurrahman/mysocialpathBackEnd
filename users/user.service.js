@@ -235,14 +235,14 @@ async function socialRegister(userParam) {
             user.firstName = userParam.first_name;
             user.lastName = userParam.last_name;
             user.userdata[0].name = userParam.name;
-            if (userParam.email) {
+            if (userParam.hasOwnProperty(email)) {
                 user.email = userParam.email;
             }
         } else {
             user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
             user.firstName = userParam.name;
             user.userdata[10].name = userParam.name;
-            if (userParam.email) {
+            if (userParam.hasOwnProperty(email)) {
                 user.email = userParam.email;
             }
         }
