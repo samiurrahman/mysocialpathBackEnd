@@ -226,7 +226,38 @@ async function singleUser({ username }) {
 
 // Social Register
 async function socialRegister(userParam) {
-    const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
+
+    if (userParam.hasOwnProperty('email')) {
+        const user = await User.findOne({ email: userParam.email, provider: userParam.provider });
+        if(!user) {
+            const user = new User(userParam);
+            
+            if (userParam.provider === 'facebook') {
+                user.username = userParam.first_name.split(' ').join('.').trim().toLowerCase();
+                user.firstName = userParam.first_name;
+                user.lastName = userParam.last_name;
+                user.userdata[0].name = userParam.name;
+                user.email = userParam.email;
+                
+            } else {
+                user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
+                user.firstName = userParam.name;
+                user.userdata[10].name = userParam.name;
+                user.email = userParam.email;
+                
+            }
+            
+            user.imgUrl = userParam.image;
+            user.hash = bcrypt.hashSync(userParam.id, 10);
+            // save user
+            await user.save();
+            return user;
+        }else {
+            return user;
+        }
+    }else {
+
+    const user = await User.findOne({ email: userParam.id, provider: userParam.provider });
     if(!user) {
         const user = new User(userParam);
         
@@ -235,16 +266,13 @@ async function socialRegister(userParam) {
             user.firstName = userParam.first_name;
             user.lastName = userParam.last_name;
             user.userdata[0].name = userParam.name;
-            if (userParam.hasOwnProperty('email')) {
-                user.email = userParam.email;
-            }
+            user.email = userParam.id;
         } else {
             user.username = userParam.name.split(' ').join('.').trim().toLowerCase();
             user.firstName = userParam.name;
             user.userdata[10].name = userParam.name;
-            if (userParam.hasOwnProperty('email')) {
-                user.email = userParam.email;
-            }
+            user.email = userParam.email;
+            
         }
         
         user.imgUrl = userParam.image;
@@ -255,6 +283,9 @@ async function socialRegister(userParam) {
     }else {
         return user;
     }
+
+    }
+    
 }
 // ends
 
