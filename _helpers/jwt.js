@@ -13,8 +13,7 @@ function jwt() {
             '/users/register',
             '/users/resetpassword',
             '/users/socialRegister',    
-            '/users/singleUser',            
-            '/users/search'            
+            '/users/singleUser'    
         ]
     });
 }
