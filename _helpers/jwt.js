@@ -12,9 +12,9 @@ function jwt() {
             '/users/authenticate',
             '/users/register',
             '/users/resetpassword',
-            '/users/socialRegister',
-
-            
+            '/users/socialRegister',    
+            '/users/singleUser',            
+            '/users/search'            
         ]
     });
 }
