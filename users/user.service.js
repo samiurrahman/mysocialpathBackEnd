@@ -65,6 +65,9 @@ async function getAll(username) {
                 },
                 { 
                     'email':  {'$regex' : username} 
+                },
+                {
+                    'userdata': {$elemMatch: { name: username}}
                 }
             ]
         }).select('-hash -email -gender -userdata -accessKeyId -secretAccessKey -aboutMe -bookmark -bookmarked -createdDate -imgUrl -region -provider');
